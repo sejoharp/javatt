@@ -9,12 +9,11 @@ import uk.co.panaxiom.playjongo.PlayJongo;
 import java.util.Optional;
 
 public class Interval {
-
-    public Optional<DateTime> stop;
     @JsonProperty("_id")
     public ObjectId id;
     public ObjectId userId;
     public DateTime start;
+    public Optional<DateTime> stop;
 
     public Interval(ObjectId id, ObjectId userId, DateTime start, Optional<DateTime> stop) {
         this.id = id;
@@ -26,26 +25,13 @@ public class Interval {
     public Interval() {
     }
 
-    public static void save(Interval interval) {
-        intervals().save(interval);
-    }
-
-    public static Interval findById(ObjectId id) {
-        return intervals().findOne(id).as(Interval.class);
-    }
-
-    public static MongoCollection intervals() {
-        return PlayJongo.getCollection("intervals");
-    }
-
-
     @Override
     public String toString() {
         return "Interval{" +
-                "stop=" + stop +
-                ", id=" + id +
+                "id=" + id +
                 ", userId=" + userId +
                 ", start=" + start +
+                ", stop=" + stop +
                 '}';
     }
 
@@ -62,15 +48,6 @@ public class Interval {
         if (userId != null ? !userId.equals(interval.userId) : interval.userId != null) return false;
 
         return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = stop != null ? stop.hashCode() : 0;
-        result = 31 * result + (id != null ? id.hashCode() : 0);
-        result = 31 * result + (userId != null ? userId.hashCode() : 0);
-        result = 31 * result + (start != null ? start.hashCode() : 0);
-        return result;
     }
 
     private boolean compareDateTimes(Optional<DateTime> thisDateTime, Optional<DateTime> dateTime) {

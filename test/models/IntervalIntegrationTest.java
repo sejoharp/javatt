@@ -1,29 +1,49 @@
 package models;
 
-import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import play.Play;
 import play.test.WithApplication;
 
-import java.util.Optional;
+import java.util.Arrays;
+import java.util.List;
 
+import static models.IntervalTestData.*;
+import static models.UserTestData.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class IntervalIntegrationTest extends WithApplication {
 
+    private IntervalDao intervalDao;
+
     @Before
     public void setup() {
-
+        intervalDao = new IntervalDao();
+        intervalDao.drop();
     }
 
     @Test
     public void savesAnInterval() {
-        Interval interval = new Interval(ObjectId.get(), ObjectId.get(), new DateTime(), Optional.empty());
-        Interval.save(interval);
-        Interval actual = Interval.findById(interval.id);
-        assertThat(actual, is(interval));
+        intervalDao.save(COMPLETED_2014_01_01_FROM_8_TO_9);
+
+        Interval actual = intervalDao.findById(COMPLETED_2014_01_01_FROM_8_TO_9.id);
+
+        assertThat(actual, is(COMPLETED_2014_01_01_FROM_8_TO_9));
+    }
+
+    @Test
+    public void findsAllIntervalsInRange() {
+        intervalDao.save(COMPLETED_2014_01_01_FROM_8_TO_9);
+        intervalDao.save(COMPLETED_2014_01_01_FROM_14_TO_18);
+        intervalDao.save(COMPLETED_2014_01_02_FROM_18_TO_20);
+        intervalDao.save(COMPLETED_2014_01_02_FROM_11_TO_12);
+        intervalDao.save(COMPLETED_2014_01_03_FROM_13_TO_14);
+        intervalDao.save(COMPLETED_2014_01_04_FROM_15_TO_19);
+
+        List<Interval> intervals = intervalDao.findAllRange(USER1, new DateTime(2014, 1, 2, 0, 0), new DateTime(2014, 1, 3, 23, 59));
+
+        assertThat(intervals.size(), is(2));
+        assertThat(intervals, is(Arrays.asList(COMPLETED_2014_01_02_FROM_18_TO_20, COMPLETED_2014_01_03_FROM_13_TO_14)));
     }
 }
