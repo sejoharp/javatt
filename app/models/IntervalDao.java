@@ -28,13 +28,9 @@ public class IntervalDao {
     }
 
     public List<Interval> findAllRange(ObjectId userId, DateTime from, DateTime to) {
-//        return StreamSupport.stream(collection()
-//                .find("{userId:#,start:{$gte :#},stop:{$lte:#}}", userId, from, to)
-//                .as(Interval.class).spliterator(), false).collect(Collectors.toList());
         Iterable<Interval> intervalIterable = collection()
-                .find("{userId:#,start:{$gte :#},stop:{$lte:#}}", userId, from, to)
+                .find("{userId:#,start:{$gte :#,$lte:#}}", userId, from.getMillis(), to.getMillis())
                 .as(Interval.class);
-        intervalIterable.forEach(System.out::println);
-        return null;
+        return StreamSupport.stream(intervalIterable.spliterator(), false).collect(Collectors.toList());
     }
 }
