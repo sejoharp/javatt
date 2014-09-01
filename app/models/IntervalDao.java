@@ -24,7 +24,7 @@ public class IntervalDao {
     }
 
     private MongoCollection collection() {
-        return PlayJongo.getCollection("collection");
+        return PlayJongo.getCollection("intervals");
     }
 
     public List<Interval> findAllRange(ObjectId userId, DateTime from, DateTime to) {

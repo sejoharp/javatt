@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static models.IntervalTestData.*;
-import static models.UserTestData.*;
+import static models.UserTestData.USER1;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,8 +41,13 @@ public class IntervalIntegrationTest extends WithApplication {
         intervalDao.save(USER1_COMPLETED_2014_01_03_FROM_13_TO_14);
         intervalDao.save(USER1_COMPLETED_2014_01_04_FROM_15_TO_19);
 
-        List<Interval> intervals = intervalDao.findAllRange(USER1, new DateTime(2014, 1, 2, 0, 0), new DateTime(2014, 1, 3, 23, 59));
+        List<Interval> intervals = intervalDao.findAllRange(
+                USER1,
+                new DateTime(2014, 1, 2, 0, 0),
+                new DateTime(2014, 1, 3, 23, 59));
 
-        assertThat(intervals, is(Arrays.asList(USER1_COMPLETED_2014_01_02_FROM_18_TO_20, USER1_COMPLETED_2014_01_03_FROM_13_TO_14)));
+        assertThat(intervals, is(Arrays.asList(
+                USER1_COMPLETED_2014_01_02_FROM_18_TO_20,
+                USER1_COMPLETED_2014_01_03_FROM_13_TO_14)));
     }
 }
