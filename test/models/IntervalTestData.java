@@ -37,4 +37,9 @@ public class IntervalTestData {
             USER1,
             new DateTime(2014, 1, 4, 15, 0),
             Optional.of(new DateTime(2014, 1, 4, 19, 0)));
+
+    public static final Interval USER2_OPEN_2014_09_02_FROM_11 = new Interval(ObjectId.get(),
+            USER2,
+            new DateTime(2014, 9, 2, 11, 0),
+            Optional.empty());
 }

@@ -33,4 +33,8 @@ public class IntervalDao {
                 .as(Interval.class);
         return StreamSupport.stream(intervalIterable.spliterator(), false).collect(Collectors.toList());
     }
+
+    public boolean isUserWorking(ObjectId userId) {
+        return collection().count("{userId:#,stop.value:{$exists:false}}", userId) > 0;
+    }
 }
