@@ -5,9 +5,6 @@ import org.jongo.Mapper;
 import org.jongo.marshall.jackson.JacksonMapper;
 import uk.co.panaxiom.playjongo.JongoMapperFactory;
 
-/**
- * Created by joscha on 29.08.14.
- */
 public class JongoMapperFactoryImpl implements JongoMapperFactory {
     @Override
     public Mapper create() {

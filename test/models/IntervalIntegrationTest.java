@@ -11,8 +11,7 @@ import java.util.List;
 import static models.IntervalTestData.*;
 import static models.UserTestData.USER1;
 import static models.UserTestData.USER2;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.fest.assertions.Assertions.assertThat;
 
 public class IntervalIntegrationTest extends WithApplication {
 
@@ -30,7 +29,7 @@ public class IntervalIntegrationTest extends WithApplication {
 
         Interval actual = intervalDao.findById(USER1_COMPLETED_2014_01_01_FROM_8_TO_9.id);
 
-        assertThat(actual, is(USER1_COMPLETED_2014_01_01_FROM_8_TO_9));
+        assertThat(actual).isEqualTo(USER1_COMPLETED_2014_01_01_FROM_8_TO_9);
     }
 
     @Test
@@ -47,22 +46,22 @@ public class IntervalIntegrationTest extends WithApplication {
                 new DateTime(2014, 1, 2, 0, 0),
                 new DateTime(2014, 1, 3, 23, 59));
 
-        assertThat(intervals, is(Arrays.asList(
+        assertThat(intervals).isEqualTo(Arrays.asList(
                 USER1_COMPLETED_2014_01_02_FROM_18_TO_20,
-                USER1_COMPLETED_2014_01_03_FROM_13_TO_14)));
+                USER1_COMPLETED_2014_01_03_FROM_13_TO_14));
     }
 
     @Test
     public void user2IsNotWorking() {
         intervalDao.save(USER2_COMPLETED_2014_01_02_FROM_11_TO_12);
 
-        assertThat(intervalDao.isUserWorking(USER2),is(false));
+        assertThat(intervalDao.isUserWorking(USER2)).isFalse();
     }
 
     @Test
     public void user2IsWorking() {
         intervalDao.save(USER2_OPEN_2014_09_02_FROM_11);
 
-        assertThat(intervalDao.isUserWorking(USER2),is(true));
+        assertThat(intervalDao.isUserWorking(USER2)).isTrue();
     }
 }
