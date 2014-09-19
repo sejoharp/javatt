@@ -78,7 +78,7 @@ public class IntervalControllerTest {
         Result result = new IntervalController().start();
 
         assertThat(status(result)).isEqualTo(FORBIDDEN);
-        assertThat(getReturnCode(result)).isEqualTo("USER_IS_ALREADY_WORKING");
+        assertThat(getReturnCode(result)).isEqualTo(ReturnCode.USER_IS_ALREADY_WORKING.name());
         verify(intervalDaoMock, never()).save(any(Interval.class));
     }
 

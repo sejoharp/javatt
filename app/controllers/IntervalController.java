@@ -19,7 +19,7 @@ public class IntervalController extends Controller {
         if (intervalDao.isUserWorking(userid)) {
 
         } else {
-            return forbidden(Json.newObject().put("returnCode", "USER_IS_ALREADY_WORKING"));
+            return forbidden(Json.newObject().put("returnCode", ReturnCode.USER_IS_ALREADY_WORKING.name()));
         }
         return ok(Json.toJson("Moin"));
     }
