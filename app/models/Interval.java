@@ -3,8 +3,6 @@ package models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.bson.types.ObjectId;
 import org.joda.time.DateTime;
-import org.jongo.MongoCollection;
-import uk.co.panaxiom.playjongo.PlayJongo;
 
 import java.util.Optional;
 
@@ -17,6 +15,13 @@ public class Interval {
 
     public Interval(ObjectId id, ObjectId userId, DateTime start, Optional<DateTime> stop) {
         this.id = id;
+        this.userId = userId;
+        this.start = start;
+        this.stop = stop;
+    }
+
+    public Interval(ObjectId userId, DateTime start, Optional<DateTime> stop) {
+        this.id = ObjectId.get();
         this.userId = userId;
         this.start = start;
         this.stop = stop;

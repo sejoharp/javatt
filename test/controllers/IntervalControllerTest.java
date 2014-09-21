@@ -64,7 +64,7 @@ public class IntervalControllerTest {
         when(intervalDaoMock.isUserWorking(UserTestData.USER1)).thenReturn(false);
         contextArguments.put("user", UserTestData.USER1);
 
-        Result result = new IntervalController().start();
+        Result result = intervalController.start();
 
         verify(intervalDaoMock, times(1)).save(any(Interval.class));
         assertThat(status(result)).isEqualTo(OK);
@@ -75,7 +75,7 @@ public class IntervalControllerTest {
         when(intervalDaoMock.isUserWorking(UserTestData.USER1)).thenReturn(true);
         contextArguments.put("user", UserTestData.USER1);
 
-        Result result = new IntervalController().start();
+        Result result = intervalController.start();
 
         assertThat(status(result)).isEqualTo(FORBIDDEN);
         assertThat(getReturnCode(result)).isEqualTo(ReturnCode.USER_IS_ALREADY_WORKING.name());
@@ -87,7 +87,7 @@ public class IntervalControllerTest {
         when(intervalDaoMock.isUserWorking(UserTestData.USER1)).thenReturn(true);
         contextArguments.put("user", UserTestData.USER1);
 
-        Result result = new IntervalController().start();
+        Result result = intervalController.start();
 
         assertThat(contentType(result)).isEqualTo("application/json");
     }
@@ -96,6 +96,7 @@ public class IntervalControllerTest {
         Map<String, String> flashData = Collections.emptyMap();
         Long id = 2L;
         contextArguments = new HashMap<>();
+        contextArguments.put("user", UserTestData.USER1);
         play.api.mvc.RequestHeader header = mock(play.api.mvc.RequestHeader.class);
         return new Http.Context(id, header, request, flashData, flashData, contextArguments);
     }
