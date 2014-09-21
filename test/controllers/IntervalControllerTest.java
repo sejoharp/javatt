@@ -1,12 +1,10 @@
 package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.ImmutableMap;
 import models.Interval;
 import models.IntervalDao;
 import models.UserTestData;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -15,12 +13,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import play.libs.Json;
 import play.mvc.Http;
 import play.mvc.Result;
-import play.test.FakeApplication;
-import play.test.Helpers;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -32,8 +27,6 @@ import static play.test.Helpers.*;
 @RunWith(MockitoJUnitRunner.class)
 public class IntervalControllerTest {
 
-    private static FakeApplication app;
-
     @Mock
     private Http.Request request;
     @Mock
@@ -41,28 +34,10 @@ public class IntervalControllerTest {
     @InjectMocks
     private IntervalController intervalController;
 
-    private Map<String, Object> contextArguments;
-
-    @BeforeClass
-    public static void startApp() {
-        app = Helpers.fakeApplication();
-        Helpers.start(app);
-    }
-
-    @AfterClass
-    public static void stopApp() {
-        Helpers.stop(app);
-    }
-
-    @Before
-    public void beforeTest() {
-        Http.Context.current.set(createContext());
-    }
-
     @Test
     public void createsNewInterval() {
         when(intervalDaoMock.isUserWorking(UserTestData.USER1)).thenReturn(false);
-        contextArguments.put("user", UserTestData.USER1);
+        setHttpContext(ImmutableMap.of("user", UserTestData.USER1));
 
         Result result = intervalController.start();
 
@@ -73,7 +48,7 @@ public class IntervalControllerTest {
     @Test
     public void doesNotCreateNewInterval() throws IOException {
         when(intervalDaoMock.isUserWorking(UserTestData.USER1)).thenReturn(true);
-        contextArguments.put("user", UserTestData.USER1);
+        setHttpContext(ImmutableMap.of("user", UserTestData.USER1));
 
         Result result = intervalController.start();
 
@@ -85,20 +60,18 @@ public class IntervalControllerTest {
     @Test
     public void answersWithJson() {
         when(intervalDaoMock.isUserWorking(UserTestData.USER1)).thenReturn(true);
-        contextArguments.put("user", UserTestData.USER1);
+        setHttpContext(ImmutableMap.of("user", UserTestData.USER1));
 
         Result result = intervalController.start();
 
         assertThat(contentType(result)).isEqualTo("application/json");
     }
 
-    private Http.Context createContext() {
+    private void setHttpContext(Map<String, Object> contextArguments) {
         Map<String, String> flashData = Collections.emptyMap();
         Long id = 2L;
-        contextArguments = new HashMap<>();
-        contextArguments.put("user", UserTestData.USER1);
         play.api.mvc.RequestHeader header = mock(play.api.mvc.RequestHeader.class);
-        return new Http.Context(id, header, request, flashData, flashData, contextArguments);
+        Http.Context.current.set(new Http.Context(id, header, request, flashData, flashData, contextArguments));
     }
 
     private JsonNode getJsonNode(Result result) throws IOException {
